@@ -15,8 +15,8 @@ function App() {
   };
 
   return (
-    <div style={{ height: '100vh', width: '100vw', display: 'flex', flexDirection: 'column' }}>
-      <div style={{ padding: '10px', background: '#f0f0f0', zIndex: 1000 }}>
+    <div >
+     
       <div className="input-container">
         <input
           type="text"
@@ -26,7 +26,7 @@ function App() {
           className="centered-input"
         />
         </div>
-      </div>
+      
       <div style={{ flex: 1, position: 'relative' }}>
         <CytoscapeGraph graphData={filteredData} />
       </div>
