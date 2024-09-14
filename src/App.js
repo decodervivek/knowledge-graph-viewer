@@ -18,7 +18,7 @@ function App() {
       <div style={{ padding: '10px', background: '#f0f0f0', zIndex: 1000 }}>
         <input
           type="text"
-          placeholder="Filter nodes..."
+          placeholder="dump that frigging text here..."
           value={filterText}
           onChange={handleFilterChange}
           style={{
