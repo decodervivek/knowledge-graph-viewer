@@ -1,71 +1,38 @@
 import React, { useEffect, useState } from 'react';
-import { ForceGraph2D } from 'react-force-graph';
 import { getSession } from './neo4jConnection';
+import CytoscapeGraph from './CytoscapeGraph';
 
 function App() {
   const [graphData, setGraphData] = useState({ nodes: [], links: [] });
+  const [filterText, setFilterText] = useState('');
+  const [filteredData, setFilteredData] = useState({ nodes: [], links: [] });
 
-  useEffect(() => {
-    const fetchGraph = async () => {
-      const session = getSession();
-      try {
-        const result = await session.run(
-          'MATCH (n)-[r]->(m) RETURN n, r, m'
-        );
-        
-        const nodes = new Map();
-        const links = [];
+  // ... (keep the existing useEffect hooks and other functions)
 
-        result.records.forEach(record => {
-          const source = record.get('n');
-          const target = record.get('m');
-          const relationship = record.get('r');
-
-          if (!nodes.has(source.identity.low)) {
-            nodes.set(source.identity.low, {
-              id: source.identity.low,
-              label: source.properties.name || 'Unnamed',
-              type: source.labels[0]
-            });
-          }
-
-          if (!nodes.has(target.identity.low)) {
-            nodes.set(target.identity.low, {
-              id: target.identity.low,
-              label: target.properties.name || 'Unnamed',
-              type: target.labels[0]
-            });
-          }
-
-          links.push({
-            source: source.identity.low,
-            target: target.identity.low,
-            label: relationship.type
-          });
-        });
-
-        setGraphData({
-          nodes: Array.from(nodes.values()),
-          links: links
-        });
-      } finally {
-        await session.close();
-      }
-    };
-
-    fetchGraph();
-  }, []);
+  const handleFilterChange = (event) => {
+    setFilterText(event.target.value);
+  };
 
   return (
-    <div style={{ height: '100vh', width: '100vw' }}>
-      <ForceGraph2D
-        graphData={graphData}
-        nodeLabel="label"
-        nodeAutoColorBy="type"
-        linkLabel="label"
-        linkDirectionalArrowLength={3.5}
-        linkDirectionalArrowRelPos={1}
-      />
+    <div style={{ height: '100vh', width: '100vw', display: 'flex', flexDirection: 'column' }}>
+      <div style={{ padding: '10px', background: '#f0f0f0', zIndex: 1000 }}>
+        <input
+          type="text"
+          placeholder="Filter nodes..."
+          value={filterText}
+          onChange={handleFilterChange}
+          style={{
+            width: '100%',
+            padding: '10px',
+            fontSize: '16px',
+            border: '1px solid #ccc',
+            borderRadius: '4px'
+          }}
+        />
+      </div>
+      <div style={{ flex: 1, position: 'relative' }}>
+        <CytoscapeGraph graphData={filteredData} />
+      </div>
     </div>
   );
 }
