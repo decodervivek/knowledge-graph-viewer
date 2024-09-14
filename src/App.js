@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { getSession } from './neo4jConnection';
-import CytoscapeGraph from './CytoscapeGraph';
+import CytoscapeGraph from './components/CytoscapeGraph';
 
 function App() {
   const [graphData, setGraphData] = useState({ nodes: [], links: [] });
